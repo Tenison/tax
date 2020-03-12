@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+
+    <!-- Title Page-->
+    <title>Income Tax</title>
+
+    <!-- Icons font CSS-->
+    <link href="vendor/mdi-font/css/material-design-iconic-font.min.css" rel="stylesheet" media="all">
+    <link href="vendor/font-awesome-4.7/css/font-awesome.min.css" rel="stylesheet" media="all">
+    <!-- Font special for pages-->
+    <link href="https://fonts.googleapis.com/css?family=Poppins:100,100i,200,200i,300,300i,400,400i,500,500i,600,600i,700,700i,800,800i,900,900i" rel="stylesheet">
+
+    <!-- Vendor CSS-->
+    <link href="vendor/select2/select2.min.css" rel="stylesheet" media="all">
+    <link href="vendor/datepicker/daterangepicker.css" rel="stylesheet" media="all">
+
+    <!-- Main CSS-->
+    <link href="css/main.css" rel="stylesheet" media="all">
+</head>
+
+<body>
+    <div class="page-wrapper bg-gra-02 p-t-100 p-b-100 font-poppins">
+        <div class="wrapper wrapper--w680">
+            <div class="card card-4">
+                <div class="card-body">
+                    <h2 class="title">Income Tax Rates ( Act 896 Amended, 2020)</h2>
+                    <form id="form">
+                        <div class="row row-space">
+                            <div>
+                                <div class="input-group">
+                                    <label class="label">Please input your Taxable Income below : </label>
+                                    <input class="input--style-4" type="text" name="input_tax" style="background-color: #D8D8D8 ">
+                                </div>
+                            </div>
+                            <!-- <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Gross</label>
+                                    <input class="input--style-4" type="text" name="gross">
+                                </div>
+                            </div> -->
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Nationality</label>
+                                    <div class="p-t-10">
+                                        <label class="radio-container m-r-45">Resident
+                                            <input type="radio" checked="checked" name="res" value="on">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                        <h3> <p></p></h3>
+                                        <label class="radio-container">Non-Resident
+                                            <input type="radio" name="res" value="off">
+                                            <span class="checkmark"></span>
+                                        </label>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="row row-space">
+                            <div class="col-2">
+                                <div class="group">
+                                    <div class="p-t-15">
+                                        <button class="btn btn--radius-2 btn--blue" type="submit">Calculate tax</button>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-2">
+                                <div class="input-group">
+                                    <label class="label">Income Tax : </label>
+                                    <input class="input--style-4" type="text" id="output" style="background-color: #D8D8D8 " readonly>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="">
+                            <h5 style="color :blue ">NOTE : This App only calculates the tax on your taxable income, not your gross income</h5>
+                            <h5>Gross incomes includes all your benefits without your SSNIT deductions</h5>    
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Jquery JS-->
+    <script src="vendor/jquery/jquery.min.js"></script>
+    <!-- Vendor JS-->
+    <script src="vendor/select2/select2.min.js"></script>
+    <script src="vendor/datepicker/moment.min.js"></script>
+    <script src="vendor/datepicker/daterangepicker.js"></script>
+
+    <!-- Main JS-->
+    <script src="js/global.js"></script>
+
+</body>
+<script>
+    document.querySelector('form').addEventListener('submit', (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        let res = formData.get('res') == 'on' ? true : false;
+        console.log(res);
+        let income = parseFloat(formData.get('input_tax'));
+        let results = !isNaN(parseFloat(income)) ? calTax(income, res) : alert("Please enter a Number");
+        console.log(results);
+        document.getElementById("output").value = results.toFixed(2);
+
+    });
+
+    //Resident must be true or false
+    var calTax = (income, isResident) => {
+        //income = 0.055 * income;
+        let tax;
+        if(isResident){
+            if(income <= 319)
+                return 0;
+            else if(income <= 419){
+                tax = income - 319;
+                return 0.05 * tax;
+            }else if(income <= 539){
+                tax =  income - 419;
+                return (0.10 * tax) + 5;
+            }else if(income <= 3539){
+                tax = income - 539;
+                return (0.175 * tax) + 17;
+            }else if(income <= 20000){
+                tax = income - 3539;
+                return (0.25 * tax) + 542;
+            }else{
+                tax = income - 20000;
+                return (0.30 * tax) + 4657.25;
+            }
+        }else{
+            return 0.25 * income;
+        }
+    }
+    
+</script>
+
+</html>
+<!-- end document-->
